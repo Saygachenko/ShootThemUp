@@ -6,14 +6,20 @@
 #include "AIController.h"
 #include "STUAIController.generated.h"
 
-/**
- * 
- */
+class USTUAIPerceptionComponent;
+
 UCLASS()
 class SHOOTTHEMUP_API ASTUAIController : public AAIController
 {
 	GENERATED_BODY()
+
+public:
+	ASTUAIController(); // наш конструктор
 	
 protected:
-	virtual void OnPossess(APawn* InPawn) override; // переопределяем OnPossess (когда мы получили контроль над павном) - может вызываться несколько раз во время у контроля может менятся Pawn
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	USTUAIPerceptionComponent* STUAIPerceptionComponent; // указатель на компонент USTUAIPerceptionComponent (компонент позволяет ИИ определять других акторов в мире - видеть, слышать врагов, реагировать на урон)
+
+	virtual void OnPossess(APawn* InPawn) override; // переопределяем OnPossess (когда мы получили контроль над павном) - может вызываться несколько раз во время игры, у контроля может менятся Pawn
+	virtual void Tick(float DeltaTime) override;
 };
