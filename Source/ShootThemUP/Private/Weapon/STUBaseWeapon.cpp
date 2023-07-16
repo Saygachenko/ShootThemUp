@@ -66,14 +66,29 @@ APlayerController* ASTUBaseWeapon::GetPlayerController() const
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
-    const auto Controller = GetPlayerController();
-    if (!Controller)
+    const auto STUCharacter = Cast<ACharacter>(GetOwner()); // каст к чарактеру GetOwner
+    if (!STUCharacter) // если объект 0
     {
-        return false;
+        return false; // выход из фукнции
     }
 
-    Controller->GetPlayerViewPoint(ViewLocation, ViewRotation); // фукнция которая возвращает позицию камеры и ориентацию в
-                                                  // пространстве GetPlayerViewPoint(положение камеры, вращение камеры)
+    if (STUCharacter->IsPlayerControlled()) // проверяем, контроллируется данный Character AI или человеком. IsPlayerControlled - Функция возвращает bool значение 
+    {
+        const auto Controller = GetPlayerController(); // указатель на контроллер
+        if (!Controller) // если контрля нет
+        {
+            return false; // выход из функции
+        }
+
+        Controller->GetPlayerViewPoint(ViewLocation, ViewRotation); // фукнция которая возвращает позицию камеры и ориентацию в
+                                                                    // пространстве GetPlayerViewPoint(положение камеры, вращение камеры)
+    }
+    else // если Character контроллирует AI (просто будем стрелять по направлению дула)
+    {
+        ViewLocation = GetMuzzleWorldLocation(); // присваиваем ViewLocation значении позиции нашего дула
+        ViewRotation = WeaponMesh->GetSocketRotation(MuzzleSocketName); // ViewRotation записываем значение GetSocketRotation(MuzzleSocketName)
+    }
+
     return true;
 }
 

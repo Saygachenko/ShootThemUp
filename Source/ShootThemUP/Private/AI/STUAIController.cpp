@@ -4,6 +4,7 @@
 #include "AI/STUAIController.h"
 #include "AI/STUAICharacter.h"
 #include "Components/STUAIPerceptionComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 ASTUAIController::ASTUAIController()
 {
@@ -25,6 +26,15 @@ void ASTUAIController::OnPossess(APawn* InPawn)
 void ASTUAIController::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	const auto AimActor = STUAIPerceptionComponent->GetClosestEnemy(); // переменной присваиваем результат функции GetClosestEnemy
+	const auto AimActor = GetFocusOnActor(); // переменной присваиваем результат функции GetFocusOnActor - фокусировка на ближайшего актора
 	SetFocus(AimActor); // SetFocus() - функция выставляем вращение контроллера таким образом, чтобы FVector указывал на актор который мы передадим ей в параметры
+}
+
+AActor* ASTUAIController::GetFocusOnActor() const
+{
+	if (!GetBlackboardComponent()) // если GetBlackboardComponent возвращает false
+	{
+		return nullptr; // вовзращаем так же 0 
+	}
+	return Cast<AActor>(GetBlackboardComponent()->GetValueAsObject(FocusOnKeyName)); // возвращаем объект на который нам нужно сфокусироваться
 }

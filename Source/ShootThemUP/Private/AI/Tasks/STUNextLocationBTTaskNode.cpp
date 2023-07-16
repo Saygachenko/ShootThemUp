@@ -33,7 +33,18 @@ EBTNodeResult::Type USTUNextLocationBTTaskNode::ExecuteTask(UBehaviorTreeCompone
 	}
 
 	FNavLocation NavLocation; // переменная хранит найденную точку. Возвращает true или false
-	const auto Found = NavSys->GetRandomReachablePointInRadius(Pawn->GetActorLocation(), Radius, NavLocation); // функция которая вызывает рандомную точку GetRandomReachablePointInRadius(центр относительно которого мы ищем точку, радиус поиска, найденная точка) - под капотом алгоритм поиска пути
+	auto Location = Pawn->GetActorLocation(); // указатель на координаты Павна
+	if (!SelfCenter) // если SelfCenter = false
+	{
+		auto CenterActor = Cast<AActor>(Blackboard->GetValueAsObject(CenterActorKey.SelectedKeyName)); // меняем центр на навигационном меше относительно имени ключа который мы указали в Blackboard
+		if (!CenterActor) // если центр Актора не найден
+		{
+			return EBTNodeResult::Failed; // наш таск заканчивае работу со статусом Failed
+		}
+		Location = CenterActor->GetActorLocation(); // иначе передаём новую позицию данного Актора
+	}
+
+	const auto Found = NavSys->GetRandomReachablePointInRadius(Location, Radius, NavLocation); // функция которая вызывает рандомную точку GetRandomReachablePointInRadius(центр относительно которого мы ищем точку, радиус поиска, найденная точка) - под капотом алгоритм поиска пути
 	if (!Found) // если не true
 	{
 		return EBTNodeResult::Failed; // наш таск заканчивае работу со статусом Failed

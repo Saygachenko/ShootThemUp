@@ -4,8 +4,9 @@
 #include "AI/STUAICharacter.h"
 #include "AI/STUAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/STUAIWeaponComponent.h"
 
-ASTUAICharacter::ASTUAICharacter(const FObjectInitializer &ObjInit) : Super(ObjInit)
+ASTUAICharacter::ASTUAICharacter(const FObjectInitializer &ObjInit) : Super(ObjInit.SetDefaultSubobjectClass<USTUAIWeaponComponent>("WeaponComponent")) // Функция SetDefaultSubobjectClass для замены компонента по умолчанию
 {
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned; // пешка автоматически переходит во владение AI-контроллера при каждом ее создании
     AIControllerClass = ASTUAIController::StaticClass(); // установили ИИ базовый контроллер

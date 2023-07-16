@@ -25,4 +25,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	FBlackboardKeySelector AimLocationKey; // переменная хранит ключи blackboard(в него мы будем записывать нашу рандомную точку локации)
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	bool SelfCenter = true; // отвечает за нахождение новой точки на навигационном Меше относительно себя, либо относительно другого актора
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI", meta = (EditCindition = "!SelfCenter"))
+	FBlackboardKeySelector CenterActorKey; // хранится ключ для объекта, относительно какого мы будет находить рандомную точку на навигационном Меше
+
 };

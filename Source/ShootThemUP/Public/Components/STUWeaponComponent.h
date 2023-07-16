@@ -18,9 +18,9 @@ public:
 	// Sets default values for this component's properties
 	USTUWeaponComponent();
 
-	void StartFire(); // функция начала стрельбы
+	virtual void StartFire(); // функция начала стрельбы
     void StopFire(); // функция конца стрельбы
-    void NextWeapon(); // следуещее оружие
+	virtual void NextWeapon(); // следуещее оружие
     void Reload(); // функция перезарядки
 
 	bool IsFiring() const; // функция отмены стрельбы
@@ -45,28 +45,33 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Animation")
     UAnimMontage *EquipAnimMontage; // указатель на смену оружия
 
+	UPROPERTY()
+	ASTUBaseWeapon* CurrentWeapon = nullptr; // количество оружия
+
+	UPROPERTY()
+	TArray<ASTUBaseWeapon*> Weapons; // хранится наше оружие
+
+	int32 CurrentWeaponIndex = 0; // хранение индекс оружия
+
 	// Called when the game starts
 	virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override; // уничтожаем актора при вызове компонента EndPlay - вызывается у каждого компонента при вызове EndPlay родительского актора
 
+	bool CanFire() const; // функция будет возвращать true когда мы сможем стрелять
+	bool CanEquip() const; // функция будет возвращать true когда мы можем сменить оружие
+
+	void EquipWeapon(int32 WeaponIndex); // экипировка персонажа, оружие в руках
+
 private:
-
-	UPROPERTY()
-	ASTUBaseWeapon *CurrentWeapon = nullptr; // количество оружия
-
-	UPROPERTY()
-    TArray<ASTUBaseWeapon *> Weapons; // хранится наше оружие
 
 	UPROPERTY()
     UAnimMontage *CurrentReloadAnimMontage = nullptr; // храним указатель на анимацию перезарядки
 
-	int32 CurrentWeaponIndex = 0; // хранение индекс оружия
     bool EquipAnimInProgress = false; // когда будет происходить анимация смены оружия, данная переменная будет true
     bool ReloadAnimInProgress = false; // когда будет происходить анимация перезарядки, данная переменная будет true
 
 	void SpawnWeapons(); // наша функция спавна оружия
 	void AttachWeaponToSocket(ASTUBaseWeapon *Weapon, USceneComponent *SceneComponent, const FName &SocketName); // прикрепляем оружие к сокету
-    void EquipWeapon(int32 WeaponIndex); // экипировка персонажа, оружие в руках
 	
 	void PlayAnimMontag(UAnimMontage* Animation); // функция проигрывает наш Anim Montage
 
@@ -74,8 +79,6 @@ private:
     void OnEnquipFinished(USkeletalMeshComponent* MeshComp); // биндим наш Notify - анимация смены оружия
     void OnReloadFinished(USkeletalMeshComponent *MeshComp); // биндим наш Notify - анимация перезарядки
 
-	bool CanFire() const; // функция будет возвращать true когда мы сможем стрелять
-    bool CanEquip() const; // функция будет возвращать true когда мы можем сменить оружие
     bool CanReload() const; // функция будет возвращать true когда мы можем перезарядить оружие
 
     void OnEmptyClip(ASTUBaseWeapon* AmmoEmptyWeapon); // обратная связь с нашим делегатом
