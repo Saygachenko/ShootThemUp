@@ -18,4 +18,7 @@ class SHOOTTHEMUP_API ASTUAICharacter : public ASTUBaseCharacter
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "AI")
 	UBehaviorTree* BehaviorTreeAsset; // храним указатель на дерево поведения
+
+protected:
+	virtual void OnDeath() override;
 };
