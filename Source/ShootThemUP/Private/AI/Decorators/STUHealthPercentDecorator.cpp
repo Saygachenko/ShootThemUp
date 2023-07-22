@@ -19,7 +19,7 @@ bool USTUHealthPercentDecorator::CalculateRawConditionValue(UBehaviorTreeCompone
 		return false; // выход из фукнции
 	}
 	
-	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Controller->GetPawn()); // получаем указатель на кол-во жизней ИИ персонажа
+	const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(Controller->GetPawn()); // получаем указатель на кол-во жизней у ИИ персонажа
 	if (!HealthComponent || HealthComponent->IsDead()) // если компонент жизней не получен или наш персонаж мёртв
 	{
 		return false; // выход из функции

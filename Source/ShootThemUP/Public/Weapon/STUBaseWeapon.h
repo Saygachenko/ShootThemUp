@@ -44,6 +44,7 @@ public:
 
     bool TryToAddAmmo(int32 ClipsAmount); // логика добавления магазинов и патронов(хранит кол-во магазинов)
     bool IsAmmoEmpty() const; // будет возвращать true когда наш арсенал полностью пустой
+    bool IsAmmoFull() const; // функция для улучшения читаемости кода (если магазин полон)
 
 protected:
 	// Called when the game starts or when spawned
@@ -77,8 +78,6 @@ protected:
 	void DecreaseAmmo(); // будет вызываться каждый раз после выстрела
     bool IsClipEmpty() const; // будет возвращать true когда текущая обойма у нас пустая
     void LogAmmo(); // вывод информацию про арсенал в консоль
-
-    bool IsAmmoFull() const; // функция для улучшения читаемости кода (если магазин полон)
 
     UNiagaraComponent *SpawnMuzzleFX(); // функция спавна ниагары
 

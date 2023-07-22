@@ -30,6 +30,7 @@ public:
 	bool GetCurrentWeaponAmmoData(FAmmoData &AmmoData) const; // возвращаем AmmoData арсенала
 
 	bool TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, int32 ClipsAmount); // функция хранит тип оружия и кол-во магазинов
+	bool NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType); // функция для получения патронов ИИ
 
 protected:
 

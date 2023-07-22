@@ -287,3 +287,15 @@ bool USTUWeaponComponent::TryToAddAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType, i
     return false; // выход из функции
 }
 
+bool USTUWeaponComponent::NeedAmmo(TSubclassOf<ASTUBaseWeapon> WeaponType)
+{
+    for (const auto Weapon : Weapons) // пробегаем по массиву оружия
+    {
+        if (Weapon && Weapon->IsA(WeaponType)) // проверяем указатель Weapon на 0 и существует-ли данный тип оружия
+        {
+            return !Weapon->IsAmmoFull(); // если условие выполнено , вызываем функцию IsAmmoFull() - пополняется наш боезапас
+        }
+    }
+    return false; // выход из функции
+}
+
