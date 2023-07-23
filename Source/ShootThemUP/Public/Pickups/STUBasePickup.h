@@ -36,8 +36,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	bool CouldBeTaken() const; // функция взятия пикапа для EQS
+
 private:
     float RotationYaw = 0.0f; // угол на который мы хотим вращать наш пикап
+	FTimerHandle RespawnTimerHandle; // запускаем таймер респавна, таймер локальный будет срабатывать 1 раз (отключать таймер не будем, поэтому его не нужно создавать как переменну класса не нужно)
 
     virtual bool GivePickupTo(APawn *PlayerPawn); // функция которую мы будем переопределять в пикапе здоровья и оружия (будет возвращать true если нам удалось взять пикап)
 

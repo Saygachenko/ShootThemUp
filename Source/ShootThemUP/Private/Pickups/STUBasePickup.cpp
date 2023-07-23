@@ -84,7 +84,6 @@ void ASTUBasePickup::PickupWasTaken()
         GetRootComponent()->SetVisibility(false, true); // делаем пикап невидимым. Функция SetVisibility(рендер компонента, новое значение Visibility применено ко всем дочерним компонентам) что актор перестал рендерится
     }
 
-    FTimerHandle RespawnTimerHandle; // запускаем таймер респавна, таймер локальный будет срабатывать 1 раз (отключать таймер не будем, поэтому его не нужно создавать как переменну класса не нужно)
     GetWorldTimerManager().SetTimer(RespawnTimerHandle, this, &ASTUBasePickup::Respawn, RespawnTime);
 }
 
@@ -102,5 +101,10 @@ void ASTUBasePickup::GenerateRotationYaw()
 {
     const auto Direction = FMath::RandBool() ? 1.0f : -1.0f; // генерация булевого значения RandBool()
     RotationYaw = FMath::RandRange(1.0f, 2.0f) * Direction; // функция генерации рандомных чисел RandRange(начало отрезка, конец отрезка)
+}
+
+bool ASTUBasePickup::CouldBeTaken() const  // функция взятия пикапа для EQS
+{
+    return !GetWorldTimerManager().IsTimerActive(RespawnTimerHandle); // если таймер RespawnTimerHandle не активный то пикап можно взять.
 }
 
