@@ -78,3 +78,12 @@ struct FImpactData // структура объеденяет Ниагару и Декаль
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "VFX")
     FDecalData DecalData;
 };
+
+USTRUCT(BlueprintType)
+struct FGameData // структура хранит данные в которой находятся все настройки игры
+{
+    GENERATED_USTRUCT_BODY()
+    // кол-во игроков
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "1", ClampMax = "100"))
+    int32 PlayersNum = 2;
+};
