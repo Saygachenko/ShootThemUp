@@ -34,5 +34,11 @@ protected:
     FGameData GameData; // указатель на нашу структуру
 
 private:
+    int32 CurrentRound = 1; // номер текущего раунда
+    int32 RoundCountDown = 0; // кол-во времени которое осталось для текущего раунда
+    FTimerHandle GameRoundTimerHandle;
+
     void SpawnBots(); // функция логики спавна ботов
+    void StartRound(); // функция старта раунда
+    void GameTimerUpdate(); // функция обновления таймера
 };

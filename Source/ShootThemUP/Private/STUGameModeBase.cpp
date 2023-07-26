@@ -6,6 +6,8 @@
 #include "UI/STUGameHUD.h"
 #include "AIController.h"
 
+DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
+
 ASTUGameModeBase::ASTUGameModeBase()
 {
     DefaultPawnClass = ASTUBaseCharacter::StaticClass(); // Pawn - потому что наш Character наследуется от него
@@ -18,6 +20,9 @@ void ASTUGameModeBase::StartPlay()
     Super::StartPlay();
 
     SpawnBots(); // спавн ботов
+
+    CurrentRound = 1; // текущий раунд
+    StartRound(); // старт раунда
 }
 
 UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -43,5 +48,30 @@ void ASTUGameModeBase::SpawnBots()
 
         const auto STUAIController = GetWorld()->SpawnActor<AAIController>(AIControllerClass, SpawnInfo); // спавним актора SpawnActor<AAIController>(Класс контроллера который находится в проперти, структура спавна коллизии);
         RestartPlayer(STUAIController); // RestartPlayer(базовый класс контроллера) - создаёт павна
+    }
+}
+
+void ASTUGameModeBase::StartRound()
+{
+    RoundCountDown = GameData.RoundTime; // обновляем переменную которая отвечает за время раунда
+    GetWorldTimerManager().SetTimer(GameRoundTimerHandle, this, &ASTUGameModeBase::GameTimerUpdate, 1.0f, true); // запускаем зацикленный таймер, вызывается каждую секунду
+}
+
+void ASTUGameModeBase::GameTimerUpdate()
+{
+    UE_LOG(LogSTUGameModeBase, Display, TEXT("Time: %i / Round: %i / %i"), RoundCountDown, CurrentRound, GameData.RoundsNum); // лог времени раунда, текущий раунд и макс раундов
+
+    if (--RoundCountDown == 0) // уменьшаем кол-во времени до конца на 1 и если оно равно 0
+    {
+        GetWorldTimerManager().ClearTimer(GameRoundTimerHandle); // удаляем наш таймер
+        if (CurrentRound + 1 <= GameData.RoundsNum) // текущий раунд +1 и если он меньше или равно макс числу раундов
+        {
+            ++CurrentRound; // текущий раунд + 1
+            StartRound(); // старт нового раунда
+        }
+        else
+        {
+            UE_LOG(LogSTUGameModeBase, Display, TEXT("===== GAME OVER =====")); // лог конца игры
+        }
     }
 }
