@@ -67,6 +67,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         if (CurrentRound + 1 <= GameData.RoundsNum) // текущий раунд +1 и если он меньше или равно макс числу раундов
         {
             ++CurrentRound; // текущий раунд + 1
+            ResetPlayers(); // рестарт игроков
             StartRound(); // старт нового раунда
         }
         else
@@ -74,4 +75,26 @@ void ASTUGameModeBase::GameTimerUpdate()
             UE_LOG(LogSTUGameModeBase, Display, TEXT("===== GAME OVER =====")); // лог конца игры
         }
     }
+}
+
+void ASTUGameModeBase::ResetPlayers()
+{
+    if (!GetWorld()) // если мира не существует
+    {
+        return; // выход из фукнции
+    }
+
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It) // информацию о всех котроллерах в мире можно получить через итератор GetControllerIterator
+    {
+        ResetOnePlayer(It->Get()); // вызываем для каждого контроллера на сцене ResetOnePlayer. Для получения сырого укозателя вызываем функцию Get()
+    }
+}
+
+void ASTUGameModeBase::ResetOnePlayer(AController* Controller)
+{
+    if (Controller && Controller->GetPawn()) // если контроллер и павн который им владеет существуют
+    {
+        Controller->GetPawn()->Reset(); // вызываем функцию Reset() - рестарт
+    }
+    RestartPlayer(Controller); // рестарт персонажа
 }

@@ -41,4 +41,7 @@ private:
     void SpawnBots(); // функция логики спавна ботов
     void StartRound(); // функция старта раунда
     void GameTimerUpdate(); // функция обновления таймера
+
+    void ResetPlayers(); // функция рестарта всех игроков
+    void ResetOnePlayer(AController* Controller); // функция рестарта одного игрока
 };

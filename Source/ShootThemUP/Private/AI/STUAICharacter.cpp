@@ -9,7 +9,7 @@
 
 ASTUAICharacter::ASTUAICharacter(const FObjectInitializer &ObjInit) : Super(ObjInit.SetDefaultSubobjectClass<USTUAIWeaponComponent>("WeaponComponent")) // ‘ункци€ SetDefaultSubobjectClass дл€ замены компонента по умолчанию
 {
-    AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned; // пешка автоматически переходит во владение AI-контроллера при каждом ее создании
+    AutoPossessAI = EAutoPossessAI::Disabled; // пешка автоматически переходит во владение AI-контроллера при каждом ее создании
     AIControllerClass = ASTUAIController::StaticClass(); // установили »» базовый контроллер
 
     bUseControllerRotationYaw = false; // RotationYaw выкл

@@ -10,6 +10,8 @@ ASTUAIController::ASTUAIController()
 {
 	STUAIPerceptionComponent = CreateDefaultSubobject<USTUAIPerceptionComponent>("STUAIPerceptionComponent");
 	SetPerceptionComponent(*STUAIPerceptionComponent); // для компонентна нужно вызвать функцию AIController - SetPerceptionComponent(ссылка на созданный компонент)
+
+	bWantsPlayerState = true; // Чтоб PlayerState у ИИ спавнился автоматически
 }
 
 void ASTUAIController::OnPossess(APawn* InPawn)
