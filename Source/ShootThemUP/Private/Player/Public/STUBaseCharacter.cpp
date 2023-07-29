@@ -196,3 +196,14 @@ void ASTUBaseCharacter::OnStartFire()
     }
     WeaponComponent->StartFire(); // если нет, вызываем функцию StartFire
 }
+
+void ASTUBaseCharacter::SetPlayerColor(const FLinearColor& Color)
+{
+    const auto MaterialInst = GetMesh()->CreateAndSetMaterialInstanceDynamic(0); // указатель на материалинстанс
+    if (!MaterialInst) // если материалинстант не существует
+    {
+        return; // выход из функции
+    }
+
+    MaterialInst->SetVectorParameterValue(MaterialColorName, Color); // устанавливаем цвет материалу
+}

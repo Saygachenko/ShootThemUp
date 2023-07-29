@@ -50,6 +50,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
     FVector2D LandedDamage = FVector2D(10.0f, 100.0f); // отвечает за нанесение урона с падения
 
+	UPROPERTY(EditDefaultsOnly, Category = "Material")
+	FName MaterialColorName = "Paint Color"; // отвечает за имя параметра у материала
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -69,6 +72,8 @@ public:
     float GetMovementDirection() const;
 
 	void OnStartFire(); // старт стрельбы
+
+	void SetPlayerColor(const FLinearColor& Color); // функция будет задавать цвет материалу персонажа
 
 private:
     bool WantsToRun = false;

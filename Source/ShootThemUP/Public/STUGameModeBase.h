@@ -44,4 +44,8 @@ private:
 
     void ResetPlayers(); // функция рестарта всех игроков
     void ResetOnePlayer(AController* Controller); // функция рестарта одного игрока
+
+    void CreateTeamsInfo(); // функция распределение игроков по командам (вызывается 1 раз при старте игры)
+    FLinearColor DetermineColorByTeamID(int32 TeamID) const;// функция возвращает цвет взависимости от team ID
+    void SetPlayerColor(AController* Controller); // функция будет передавать классу Character его цвет
 };

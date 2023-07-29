@@ -92,4 +92,10 @@ struct FGameData // структура хранит данные в которой находятся все настройки иг
     // продолжительность раунда
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "3", ClampMax = "300"))
     int32 RoundTime = 10;
+    // дефолтный цвет команды
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    FLinearColor DefaultTeamColor = FLinearColor::Red;
+    // массив цветов из которого мы будет выбирать цвет для команды взависимости от ИД команды
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+    TArray<FLinearColor> TeamColors;
 };

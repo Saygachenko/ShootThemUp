@@ -5,6 +5,7 @@
 #include "Player/Public/STUPlayerController.h"
 #include "UI/STUGameHUD.h"
 #include "AIController.h"
+#include "Player/Public/STUPlayerState.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
@@ -13,6 +14,7 @@ ASTUGameModeBase::ASTUGameModeBase()
     DefaultPawnClass = ASTUBaseCharacter::StaticClass(); // Pawn - потому что наш Character наследуется от него
     PlayerControllerClass = ASTUPlayerController::StaticClass();
     HUDClass = ASTUGameHUD::StaticClass();
+    PlayerStateClass = ASTUPlayerState::StaticClass(); // указываем PlayerState статическим
 }
 
 void ASTUGameModeBase::StartPlay()
@@ -20,6 +22,7 @@ void ASTUGameModeBase::StartPlay()
     Super::StartPlay();
 
     SpawnBots(); // спавн ботов
+    CreateTeamsInfo(); // функция для распределения игроков по командам
 
     CurrentRound = 1; // текущий раунд
     StartRound(); // старт раунда
@@ -86,7 +89,7 @@ void ASTUGameModeBase::ResetPlayers()
 
     for (auto It = GetWorld()->GetControllerIterator(); It; ++It) // информацию о всех котроллерах в мире можно получить через итератор GetControllerIterator
     {
-        ResetOnePlayer(It->Get()); // вызываем для каждого контроллера на сцене ResetOnePlayer. Для получения сырого укозателя вызываем функцию Get()
+        ResetOnePlayer(It->Get()); // вызываем для каждого контроллера на сцене ResetOnePlayer. Для получения сырого указателя вызываем функцию Get()
     }
 }
 
@@ -97,4 +100,68 @@ void ASTUGameModeBase::ResetOnePlayer(AController* Controller)
         Controller->GetPawn()->Reset(); // вызываем функцию Reset() - рестарт
     }
     RestartPlayer(Controller); // рестарт персонажа
+    SetPlayerColor(Controller); // установка цвета команды
+}
+
+void ASTUGameModeBase::CreateTeamsInfo()
+{
+    if (!GetWorld()) // если мира не существует
+    {
+        return; // выход из фукнции
+    }
+
+    int32 TeamID = 1; // переменная номера команды
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It) // информацию о всех котроллерах в мире можно получить через итератор GetControllerIterator
+    {
+        const auto Controller = It->Get(); // сырой указатель на контроллер
+        if (!Controller) // если указатель не существует то
+        {
+            continue; // пропуск условаия
+        }
+
+        const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState); // указатель на PlayerState
+        if (!PlayerState) // если указатель на PlayerState нулевой то
+        {
+            continue; // пропуск условия
+        }
+
+        PlayerState->SetTeaimID(TeamID); // устанавливаем тим ИД
+        PlayerState->SetTeamColor(DetermineColorByTeamID(TeamID)); // устанавливаем цвет команде
+
+        SetPlayerColor(Controller); // установка цвета команды
+
+        TeamID = TeamID == 1 ? 2 : 1; // если тим ID равен 1 команде то меняем на 2 и наоборот
+    }
+}
+
+FLinearColor ASTUGameModeBase::DetermineColorByTeamID(int32 TeamID) const
+{
+    if (TeamID - 1 < GameData.TeamColors.Num()) // если тим ИД меньше чем кол-во цветов(тим ид начинается 1 , в массиве начинается с 0)
+    {
+        return GameData.TeamColors[TeamID - 1]; // возвращаем цвет с идексом тим ид
+    }
+    UE_LOG(LogSTUGameModeBase, Warning, TEXT("No color for team id: %i, set to default: %s"), TeamID, *GameData.DefaultTeamColor.ToString()); // если забыли установить цвета в массив 
+    return GameData.DefaultTeamColor; // возвращаем дефолтный красный цвет команде
+}
+
+void ASTUGameModeBase::SetPlayerColor(AController* Controller)
+{
+    if (!Controller) // если контроллера не существует
+    {
+        return; // выход из функции
+    }
+
+    const auto Character = Cast<ASTUBaseCharacter>(Controller->GetPawn()); // указатель на character
+    if (!Character) // если указатель на персонажа не существует
+    {
+        return; // выход из функции
+    }
+
+    const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState); // указатель на PlayerState
+    if (!PlayerState) // если PlayerState не существует
+    {
+        return; // выход из функции
+    }
+
+    Character->SetPlayerColor(PlayerState->GetTeamColor()); // устанавливаем цвет команды персонажу
 }
