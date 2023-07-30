@@ -33,7 +33,11 @@ AActor* USTUAIPerceptionComponent::GetClosestEnemy() const
 	for (const auto PercieveActor : PercieveActors) // проходимс€ по массиву хранени€ акторов в зоне видимости
 	{
 		const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(PercieveActor); // указатель на ’ѕ компонент
-		if (HealthComponent && !HealthComponent->IsDead()) // если указатель получен и наш персонаж не мЄртв
+
+		const auto PercievePawn = Cast<APawn>(PercieveActor); // кастим воспри€тие зрени€ к павну
+		const auto AreEnemies = PercievePawn && STUUtils::AreEnemies(Controller, PercievePawn->Controller); // если воспри€тие павна и функци€ проверки на врага true - это наш враг
+
+		if (HealthComponent && !HealthComponent->IsDead() && AreEnemies) // если указатель получен и наш персонаж не мЄртв и найдет противник
 		{
 			const auto CurrentDistance = (PercieveActor->GetActorLocation() - Pawn->GetActorLocation()).Size(); // считаем рассто€ние до актора получаем вектор между PercieveActor Pawn и находим длину вектора использую функцию FVectora Size
 			if (CurrentDistance < BestDistance) // если дистанци€ до актора меньше чем ближайшее рассто€ние (первый раз так и будет)
