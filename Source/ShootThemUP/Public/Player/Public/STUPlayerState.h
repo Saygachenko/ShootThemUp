@@ -33,8 +33,29 @@ public:
 		return TeamColor;
 	}
 
+	void AddKill() // функция добавления киллов
+	{
+		++KillsNum;
+	}
+	int32 GetKillsNum() // геттер кол-во убийств
+	{
+		return KillsNum;
+	}
+	void AddDeath() // функция добавления смертей
+	{
+		++DeathsNum;
+	}
+	int32 GetDeathsNum() // геттер кол-во смертей
+	{
+		return DeathsNum;
+	}
+
+	void LogInfo(); // функция для вывода статистики в консоль (логи)
 
 private:
 	int32 TeamID; // ид команды
 	FLinearColor TeamColor; // цвет команды
+
+	int32 KillsNum = 0; // кол-во убийств
+	int32 DeathsNum = 0; // кол-во смертей
 };

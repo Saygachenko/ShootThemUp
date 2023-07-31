@@ -76,6 +76,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         else
         {
             UE_LOG(LogSTUGameModeBase, Display, TEXT("===== GAME OVER =====")); // лог конца игры
+            LogPlayerInfo(); // статистика игроков
         }
     }
 }
@@ -164,4 +165,45 @@ void ASTUGameModeBase::SetPlayerColor(AController* Controller)
     }
 
     Character->SetPlayerColor(PlayerState->GetTeamColor()); // устанавливаем цвет команды персонажу
+}
+
+void ASTUGameModeBase::Killed(AController* KillerController, AController* VictimController)
+{
+    const auto KillerPlayerState = KillerController ? Cast<ASTUPlayerState>(KillerController->PlayerState) : nullptr; // получаем указатель PlayerState на убийцу
+    const auto VictimPlayerState = VictimController ? Cast<ASTUPlayerState>(VictimController->PlayerState) : nullptr; // получаем указатель PlayerState на жертву 
+
+    if (KillerPlayerState) // если убийца существует
+    {
+        KillerPlayerState->AddKill(); // то вызываем функции убийства +1
+    }
+
+    if (VictimPlayerState) // если жертва существует
+    {
+        VictimPlayerState->AddDeath(); // то вызываем функции смерти +1
+    }
+}
+
+void ASTUGameModeBase::LogPlayerInfo()
+{
+    if (!GetWorld()) // если мира не существует
+    {
+        return; // выход из функции
+    }
+
+    for (auto It = GetWorld()->GetControllerIterator(); It; ++It) // информацию о всех котроллерах в мире можно получить через итератор GetControllerIterator
+    {
+        const auto Controller = It->Get(); // сырой указатель на контроллер
+        if (!Controller) // если указатель не существует то
+        {
+            continue; // пропуск условаия
+        }
+
+        const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState); // указатель на PlayerState
+        if (!PlayerState) // если указатель на PlayerState нулевой то
+        {
+            continue; // пропуск условия
+        }
+
+        PlayerState->LogInfo(); // вызываем уровень логирования (статистика убийст/смертей)
+    }
 }

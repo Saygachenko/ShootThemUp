@@ -73,4 +73,6 @@ private:
     void SetHealth(float NewHealth); // текущее ХП
 
 	void PlayCameraShake(); // наша функция проигрывания тряски камеры
+
+	void Killed(AController* KillerController); // вспомагательная функция киллера
 };

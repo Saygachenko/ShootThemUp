@@ -59,4 +59,6 @@ private:
     void SetMuzzleFXVisibility(bool Visible); // функция видимости нашей ниагар системы
 
     void SpawnTraceFX(const FVector& TraceStart, const FVector& TraceEnd); // функция отвечает за спавн эффекта трейса
+
+    AController* GetController() const; // функция получения контроллера
 };

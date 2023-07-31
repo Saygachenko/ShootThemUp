@@ -23,6 +23,8 @@ public:
 
     virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override; // функция которая возвращает класс Павн который необходимо заспавнить
 
+    void Killed(AController* KillerController, AController* VictimController); // функция подсчёта статистики убийств/смертей
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<AAIController> AIControllerClass; // указатель на класс контроллера ИИ
@@ -48,4 +50,6 @@ private:
     void CreateTeamsInfo(); // функция распределение игроков по командам (вызывается 1 раз при старте игры)
     FLinearColor DetermineColorByTeamID(int32 TeamID) const;// функция возвращает цвет взависимости от team ID
     void SetPlayerColor(AController* Controller); // функция будет передавать классу Character его цвет
+
+    void LogPlayerInfo(); // функция печатает инфу в логи про всех PlayerState
 };

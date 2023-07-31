@@ -10,6 +10,7 @@
 #include "Camera/CameraShakeBase.h" // библиотека тряски камеры
 //#include "Dev/STUFireDamageType.h" // наш тип урона огонь
 //#include "Dev/STUIceDamageType.h" // наш тип урона лёд
+#include "STUGameModeBase.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogHealthComponent, All, All);
 
@@ -50,6 +51,7 @@ void USTUHealthComponent::OnTakeAnyDamage(AActor* DamagedActor, float Damage, co
 
 	if (IsDead()) // ещё одна проверка, живы мы или нет
 	{
+		Killed(InstigatedBy); // функция убийцы
         OnDeath.Broadcast(); // вызов нашего делегата, таким образом мы оповестим всех клиентов которые подписаны на делегат о смерти
 	}
     else if (AutoHeal) // если мы живы то запуститься автохил
@@ -129,4 +131,23 @@ void USTUHealthComponent::PlayCameraShake()
 
 	Controller->PlayerCameraManager->StartCameraShake(CameraShake); // вызываем функцию StartCameraShake
 
+}
+
+void USTUHealthComponent::Killed(AController* KillerController)
+{
+	if (!GetWorld()) // если мир не существует
+	{
+		return; // выход из функции
+	}
+
+	const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode()); // указатель на гейм мод
+	if (!GameMode) // если указатель на гейм мод не сущетвует
+	{
+		return; // выход из функцииы
+	}
+
+	const auto Player = Cast<APawn>(GetOwner()); // указатель на нашего Character
+	const auto VictimController = Player ? Player->Controller : nullptr; // если наш персонаж существует, вызываем его контроллер иначе присваиваем nullptr
+
+	GameMode->Killed(KillerController, VictimController); // вызываем функция килл
 }

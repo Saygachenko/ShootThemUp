@@ -69,7 +69,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	virtual void MakeShot(); // функция логики выстрела
-    APlayerController* GetPlayerController() const; // функция на получения контроля порсонажа
+    // APlayerController* GetPlayerController() const; // функция на получения контроля порсонажа
     bool GetPlayerViewPoint(FVector &ViewLocation, FRotator &ViewRoration) const; // функция на получение доступа к камере
     FVector GetMuzzleWorldLocation() const; // функция возвращает положение сокета оружия на скелете
     virtual bool GetTraceData(FVector &TraceStart, FVector &TraceEnd) const; // функция начала линии и конца (выстрел)

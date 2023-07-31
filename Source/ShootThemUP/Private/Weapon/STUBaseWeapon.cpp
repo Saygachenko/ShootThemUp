@@ -53,7 +53,7 @@ void ASTUBaseWeapon::MakeShot()
 
 }
 
-APlayerController* ASTUBaseWeapon::GetPlayerController() const
+/*APlayerController* ASTUBaseWeapon::GetPlayerController() const
 {
     const auto Player = Cast<ACharacter>(GetOwner()); // указатель на владельца
     if (!Player)                                      // проверка на владельца
@@ -62,7 +62,7 @@ APlayerController* ASTUBaseWeapon::GetPlayerController() const
     }
 
     return Player->GetController<APlayerController>(); // указатель на контроллер
-}
+}*/
 
 bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRotation) const
 {
@@ -74,7 +74,7 @@ bool ASTUBaseWeapon::GetPlayerViewPoint(FVector& ViewLocation, FRotator& ViewRot
 
     if (STUCharacter->IsPlayerControlled()) // проверяем, контроллируется данный Character AI или человеком. IsPlayerControlled - Функция возвращает bool значение 
     {
-        const auto Controller = GetPlayerController(); // указатель на контроллер
+        const auto Controller = STUCharacter->GetController<APlayerController>(); // указатель на контроллер
         if (!Controller) // если контрля нет
         {
             return false; // выход из функции
