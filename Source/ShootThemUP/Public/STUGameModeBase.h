@@ -25,6 +25,19 @@ public:
 
     void Killed(AController* KillerController, AController* VictimController); // функция подсчёта статистики убийств/смертей
 
+    FGameData GetGameData() const // гетер нашей структуры
+    {
+        return GameData;
+    }
+    int32 GetCurrentRoundNum() const // геттер текущего раунда
+    {
+        return CurrentRound;
+    }
+    int32 GetRoundSecondsRemaining() const // геттер времени текущего раунда
+    {
+        return RoundCountDown;
+    }
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<AAIController> AIControllerClass; // указатель на класс контроллера ИИ
