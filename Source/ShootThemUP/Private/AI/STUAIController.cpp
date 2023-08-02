@@ -5,6 +5,7 @@
 #include "AI/STUAICharacter.h"
 #include "Components/STUAIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/STURespawnComponent.h"
 
 ASTUAIController::ASTUAIController()
 {
@@ -12,6 +13,8 @@ ASTUAIController::ASTUAIController()
 	SetPerceptionComponent(*STUAIPerceptionComponent); // для компонентна нужно вызвать функцию AIController - SetPerceptionComponent(ссылка на созданный компонент)
 
 	bWantsPlayerState = true; // Чтоб PlayerState у ИИ спавнился автоматически
+
+	RespawnComponent = CreateDefaultSubobject<USTURespawnComponent>("RespawnComponent"); // создаём компонент респавна
 }
 
 void ASTUAIController::OnPossess(APawn* InPawn)

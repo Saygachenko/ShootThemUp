@@ -15,13 +15,13 @@ struct FAmmoData // структура боезапасов
     GENERATED_USTRUCT_BODY()
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-    int32 Bullets; // кол-во патронов в магазине
+    int32 Bullets = 0; // кол-во патронов в магазине
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon", meta = (EditCondition = "!Infinite"))
-    int32 Clips; // кол-во магазинов
+    int32 Clips = 0; // кол-во магазинов
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Weapon")
-    bool Infinite; // определяем конечен арсенал данного оружия или нет
+    bool Infinite = true; // определяем конечен арсенал данного оружия или нет
 };
 
 USTRUCT(BlueprintType)
@@ -98,4 +98,7 @@ struct FGameData // структура хранит данные в которой находятся все настройки иг
     // массив цветов из которого мы будет выбирать цвет для команды взависимости от ИД команды
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
     TArray<FLinearColor> TeamColors;
+    // время респавна
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "3", ClampMax = "20"))
+    int32 RespawnTime = 5;
 };

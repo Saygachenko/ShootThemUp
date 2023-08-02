@@ -38,6 +38,8 @@ public:
         return RoundCountDown;
     }
 
+    void RespawnRequest(AController* Controller); // функция запроса на респавн
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<AAIController> AIControllerClass; // указатель на класс контроллера ИИ
@@ -65,4 +67,6 @@ private:
     void SetPlayerColor(AController* Controller); // функция будет передавать классу Character его цвет
 
     void LogPlayerInfo(); // функция печатает инфу в логи про всех PlayerState
+
+    void StartRespawn(AController* Controller); // функция старта респавна
 };

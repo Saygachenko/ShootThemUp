@@ -6,8 +6,12 @@
 #include "UI/STUGameHUD.h"
 #include "AIController.h"
 #include "Player/Public/STUPlayerState.h"
+#include "STUUtils.h"
+#include "Components/STURespawnComponent.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
+
+constexpr static int32 MinRoundTimeForRespawn = 10; // константая переменная минимальное время респавна до окончания раунда
 
 ASTUGameModeBase::ASTUGameModeBase()
 {
@@ -181,6 +185,8 @@ void ASTUGameModeBase::Killed(AController* KillerController, AController* Victim
     {
         VictimPlayerState->AddDeath(); // то вызываем функции смерти +1
     }
+
+    StartRespawn(VictimController); // вызываем функция старта респавна
 }
 
 void ASTUGameModeBase::LogPlayerInfo()
@@ -207,3 +213,26 @@ void ASTUGameModeBase::LogPlayerInfo()
         PlayerState->LogInfo(); // вызываем уровень логирования (статистика убийст/смертей)
     }
 }
+
+void ASTUGameModeBase::RespawnRequest(AController* Controller)
+{
+    ResetOnePlayer(Controller); // функция рестарта одного игрока
+}
+
+void ASTUGameModeBase::StartRespawn(AController* Controller)
+{
+    const auto RespawnAvailable = RoundCountDown > MinRoundTimeForRespawn + GameData.RespawnTime; // если время которое осталось больше чем MinRoundTimeForRespawn + время респавна
+    if (!RespawnAvailable) // если условие не выполняется
+    {
+        return; // выход из функции
+    }
+
+    const auto RespawnComponent = STUUtils::GetSTUPlayerComponent<USTURespawnComponent>(Controller); // получаем указатель на компонент RespawnComponent
+    if (!RespawnComponent) // если указатель не существует
+    {
+        return; // выход из функции
+    }
+
+    RespawnComponent->Respawn(GameData.RespawnTime); // иначе запуск функции Респавн - которая запускает таймер респавна
+}
+
