@@ -8,6 +8,7 @@
 #include "Player/Public/STUPlayerState.h"
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
+#include "EngineUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
@@ -79,8 +80,7 @@ void ASTUGameModeBase::GameTimerUpdate()
         }
         else
         {
-            UE_LOG(LogSTUGameModeBase, Display, TEXT("===== GAME OVER =====")); // лог конца игры
-            LogPlayerInfo(); // статистика игроков
+            GameOver(); // функци€ окончани€ игры
         }
     }
 }
@@ -234,5 +234,20 @@ void ASTUGameModeBase::StartRespawn(AController* Controller)
     }
 
     RespawnComponent->Respawn(GameData.RespawnTime); // иначе запуск функции –еспавн - котора€ запускает таймер респавна
+}
+
+void ASTUGameModeBase::GameOver()
+{
+    UE_LOG(LogSTUGameModeBase, Display, TEXT("===== GAME OVER =====")); // лог конца игры
+    LogPlayerInfo(); // статистика игроков
+
+    for (auto Pawn : TActorRange<APawn>(GetWorld())) // проходим циклом по всем павнам в мире
+    {
+        if (Pawn) // если павны есть
+        {
+            Pawn->TurnOff(); // остановка персонайжей (отключение коллизии, движени€ персонажа, физических симул€ций)
+            Pawn->DisableInput(nullptr); // отключение ввода клавиатуры
+        }
+    }
 }
 

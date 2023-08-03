@@ -69,4 +69,6 @@ private:
     void LogPlayerInfo(); // функция печатает инфу в логи про всех PlayerState
 
     void StartRespawn(AController* Controller); // функция старта респавна
+
+    void GameOver(); // функция конца игры
 };
