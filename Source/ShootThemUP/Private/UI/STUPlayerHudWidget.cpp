@@ -8,10 +8,10 @@
 
 bool USTUPlayerHudWidget::Initialize()
 {
-    const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(GetOwningPlayerPawn()); // кастим Component к HealthComponent
-    if (HealthComponent) // проверка на 0
+    if (GetOwningPlayer()) // если контроллер существует
     {
-        HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHudWidget::OnHealthChanged); // подписываемся на делегат ХП
+        GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHudWidget::OnNewPawn); // подписываемся на делегат GetOnNewPawnNotifier
+        OnNewPawn(GetOwningPlayerPawn()); // вызываем нашу функцию нового павна
     }
 
     return Super::Initialize(); // возвращаем евент Initialize он же возвращает true false
@@ -22,6 +22,15 @@ void USTUPlayerHudWidget::OnHealthChanged(float Health, float HealthDelta)
     if (HealthDelta < 0.0f) // если величина изменения здоровья меньше нуля (был нанесен урон нашему персонажу)
     {
         OnTakeDamage(); // вызываем евент OnTakeDamage()
+    }
+}
+
+void USTUPlayerHudWidget::OnNewPawn(APawn* NewPawn)
+{
+    const auto HealthComponent = STUUtils::GetSTUPlayerComponent<USTUHealthComponent>(NewPawn); // кастим Component к HealthComponent
+    if (HealthComponent && !HealthComponent->OnHealthChanged.IsBoundToObject(this)) // проверка что указатель на ХП есть и что бинда на делегат нету для нашего объекта
+    {
+        HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHudWidget::OnHealthChanged); // подписываемся на делегат ХП
     }
 }
 
