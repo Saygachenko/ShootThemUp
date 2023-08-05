@@ -6,10 +6,8 @@
 #include "GameFramework/Character.h"
 #include "STUBaseCharacter.generated.h"
 
-class UCameraComponent;
-class USpringArmComponent; // компонент для того, чтобы мы могли вращать камеру по орбите, вокруг персонажа
 class USTUHealthComponent;
-class UTextRenderComponent;
+//class UTextRenderComponent;
 class USTUWeaponComponent;
 
 UCLASS()
@@ -22,18 +20,11 @@ public:
 	ASTUBaseCharacter(const FObjectInitializer& ObjInit); // для того чтобы явно указать класс для charactermovementcomponent используем специальный конструктор с параметром
 	// в который передаётся объект инициализации const FObjectInitializer& ObjInit
 protected:
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USpringArmComponent *SpringArmComponent;
-
-    UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-    UCameraComponent* CameraComponent;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUHealthComponent *HealthComponent; // компонент для ХП
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	UTextRenderComponent* HealthTextComponent; // компонент для текста над головой
+	//UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	//UTextRenderComponent* HealthTextComponent; // компонент для текста над головой
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
     USTUWeaponComponent* WeaponComponent; // компонент для логики нашего оружия
@@ -62,11 +53,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	UFUNCTION(BlueprintCallable, Category = "Movement")
-    bool IsRunning() const;
+    virtual bool IsRunning() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
     float GetMovementDirection() const;
@@ -76,16 +64,6 @@ public:
 	void SetPlayerColor(const FLinearColor& Color); // функция будет задавать цвет материалу персонажа
 
 private:
-    bool WantsToRun = false;
-	bool IsMovingForward = false;
-    bool IsMovingRight = false;
-
-    void MoveForward(float Amount); // движение вперёд - назад
-    void MoveRight(float Amount); // движение вправо - влево
-
-	void OnStartRunning(); // функция начала ускорения
-    void OnStopRunning(); // функция окончания ускорения
-
     void OnHealthChanged(float Health, float HealthDelta);
 
 	UFUNCTION() 
