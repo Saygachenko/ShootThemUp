@@ -6,6 +6,8 @@
 #include "Components/InputComponent.h" // библиотека ввода
 #include "GameFramework/SpringArmComponent.h" // библиотека вращения по орбите (для камеры)
 #include "Components/STUWeaponComponent.h"
+#include "Components/SphereComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInit) : Super(ObjInit)
 {// вызвали конструктор родительского калсса. Функция SetDefaultSubobjectClass для замены компонента по умолчанию
@@ -19,6 +21,21 @@ ASTUPlayerCharacter::ASTUPlayerCharacter(const FObjectInitializer& ObjInit) : Su
 
     CameraComponent = CreateDefaultSubobject<UCameraComponent>("CameraComponent");
     CameraComponent->SetupAttachment(SpringArmComponent);
+
+    CameraCollisionComponent = CreateDefaultSubobject<USphereComponent>("CameraCollisionComponent"); // создаём компонент сферы
+    CameraCollisionComponent->SetupAttachment(CameraComponent); // присоединяем сферу к камере
+    CameraCollisionComponent->SetSphereRadius(10.0f); // радиус сферы
+    CameraCollisionComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Overlap); // реакция коллизии на все каналы. Тип реакции Overlap - когда происходит пересечение коллизии
+}
+
+void ASTUPlayerCharacter::BeginPlay()
+{
+    Super::BeginPlay();
+
+    check(CameraCollisionComponent);
+
+    CameraCollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionBeginOverlap); // подпись на делегат. Делегат OnComponentBeginOverlap - когда одна коллизия начинает пересикать другую
+    CameraCollisionComponent->OnComponentEndOverlap.AddDynamic(this, &ASTUPlayerCharacter::OnCameraCollisionEndOverlap);  // подпись на делегат. Делегат OnComponentEndOverlap - когда у коллизий нет точки пересечений
 }
 
 void ASTUPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -85,6 +102,34 @@ void ASTUPlayerCharacter::OnStartRunning() // когда клавиша нажата
 void ASTUPlayerCharacter::OnStopRunning() // когда клавиша отжата
 {
     WantsToRun = false;
+}
+
+void ASTUPlayerCharacter::OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+    CheckCameraOverlap(); // функция проверяет пересикает-ли сферическая коллизия капсулу или нет
+}
+
+void ASTUPlayerCharacter::OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    CheckCameraOverlap(); // функция проверяет пересикает-ли сферическая коллизия капсулу или нет
+}
+
+void ASTUPlayerCharacter::CheckCameraOverlap()
+{
+    const auto HideMesh = CameraCollisionComponent->IsOverlappingComponent(GetCapsuleComponent()); // bool переменная если true - меши пересикаются. IsOverlappingComponent(принимает другой компонет) и возвращает true - если есть пересечение
+    GetMesh()->SetOwnerNoSee(HideMesh); // в зависимости пересечения наших компонентов изменяем видимость нашего меша.
+
+    TArray<USceneComponent*> MeshChildren; // массив указателей на все дочерние компоненты
+    GetMesh()->GetChildrenComponents(true, MeshChildren); // получаем массив всех дочерних компонентов GetChildrenComponents(если true - возвращаются потомки со всех уровней если false - то первого уровня, указатель на все дочерние компоненты)
+
+    for (auto MeshChild : MeshChildren) // проходимся по всем компонента
+    {
+        const auto MeshChildGeometry = Cast<UPrimitiveComponent>(MeshChild); // у SceneComponent нет функции SetOwnerNoSee, поэтому кастим его к UPrimitiveComponent 
+        if (MeshChildGeometry) // если указатель на MeshChildGeometry существует
+        {
+            MeshChildGeometry->SetOwnerNoSee(HideMesh); // то изменяем видимость нашего меша
+        }
+    }
 }
 
 bool ASTUPlayerCharacter::IsRunning() const

@@ -8,6 +8,7 @@
 
 class UCameraComponent;
 class USpringArmComponent; // компонент для того, чтобы мы могли вращать камеру по орбите, вокруг персонажа
+class USphereComponent;
 /**
  * 
  */
@@ -27,7 +28,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
 	UCameraComponent* CameraComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
+	USphereComponent* CameraCollisionComponent; // указатель на компонент сферы
+
 	virtual void OnDeath() override;
+	virtual void BeginPlay() override;
 
 public:
 	// Called to bind functionality to input
@@ -45,4 +50,12 @@ private:
 
 	void OnStartRunning(); // функция начала ускорения
 	void OnStopRunning(); // функция окончания ускорения
+
+	UFUNCTION()
+	void OnCameraCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult); // когда одна коллизия начинает пересикать другую
+	
+	UFUNCTION()
+	void OnCameraCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex); // когда у коллизий нет точки пересечений
+
+	void CheckCameraOverlap(); // функция проверяет пересикает-ли сферическая коллизия капсулу или нет
 };
