@@ -4,6 +4,9 @@
 #include "UI/STUGameHUD.h"
 #include "Engine/Canvas.h"
 #include "Blueprint/UserWidget.h" // класс базового виджета
+#include "STUGameModeBase.h"
+
+DEFINE_LOG_CATEGORY_STATIC(LogSTUGameHUD, All, All);
 
 void ASTUGameHUD::DrawHUD()
 {
@@ -21,6 +24,15 @@ void ASTUGameHUD::BeginPlay()
     {
         PlayerHUDWidget->AddToViewport(); // вызываем функцию виджета AddToViewport(порядок отрисовки виджета)
     }
+
+    if (GetWorld()) // если указатель на мир существует
+    {
+        const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode()); // получаем указатель на гейммод
+        if (GameMode) // если указатель существует
+        {
+            GameMode->OnMatchStateChanged.AddUObject(this, &ASTUGameHUD::OnMatchStateChanged); // подписываемся на наш делегат состояния игры
+        }
+    }
 }
 
 void ASTUGameHUD::DrawCrossHair()
@@ -34,4 +46,9 @@ void ASTUGameHUD::DrawCrossHair()
 
     DrawLine(Center.Min - HalfLineSize, Center.Max, Center.Min + HalfLineSize, Center.Max, LineColor, LineThickness); // DrawLine(начальная точка на экране X, Y, конечная точка на экране X, Y, цвет линии, толщина линии) функция худа, позволяет рисовать линии на экране
     DrawLine(Center.Min, Center.Max - HalfLineSize, Center.Min, Center.Max + HalfLineSize, LineColor, LineThickness);
+}
+
+void ASTUGameHUD::OnMatchStateChanged(ESTUMatchState State)
+{
+    UE_LOG(LogSTUGameHUD, Display, TEXT("Match state changed: %s"), *UEnum::GetValueAsString(State)); // выводим в логи информацию об изменениях состоинии игры GetValueAsString - преобразует значение enum в строку
 }

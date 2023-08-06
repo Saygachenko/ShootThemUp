@@ -9,6 +9,7 @@
 #include "STUUtils.h"
 #include "Components/STURespawnComponent.h"
 #include "EngineUtils.h"
+#include "STUCoreTypes.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSTUGameModeBase, All, All);
 
@@ -31,6 +32,8 @@ void ASTUGameModeBase::StartPlay()
 
     CurrentRound = 1; // текущий раунд
     StartRound(); // старт раунда
+
+    SetMacthState(ESTUMatchState::InProgress); // функция состояния игры
 }
 
 UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -249,5 +252,16 @@ void ASTUGameModeBase::GameOver()
             Pawn->DisableInput(nullptr); // отключение ввода клавиатуры
         }
     }
+    SetMacthState(ESTUMatchState::GameOver); // функция состояния игры
+}
+
+void ASTUGameModeBase::SetMacthState(ESTUMatchState State)
+{
+    if (MatchState == State) // если текущее состояние игры равно тому которое мы хотим установить
+    {
+        return; // выход из функции
+    }
+    MatchState = State; // если нет, устанавливаем новое значения состоянии игры
+    OnMatchStateChanged.Broadcast(MatchState); // вызывает наш делегат и оповещаем всех подписчиков об изменениях состояния игры
 }
 

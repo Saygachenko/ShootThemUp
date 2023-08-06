@@ -19,6 +19,8 @@ class SHOOTTHEMUP_API ASTUGameModeBase : public AGameModeBase
 public:
     ASTUGameModeBase();
 
+    FOnMatchStateChangedSignature OnMatchStateChanged; // наш делегат состояний игры
+
     virtual void StartPlay() override; // старт игры, вызывается до BeginPlay(), GameMode и всех остальных акторов (тут мы спавним ботов)
 
     virtual UClass* GetDefaultPawnClassForController_Implementation(AController* InController) override; // функция которая возвращает класс Павн который необходимо заспавнить
@@ -53,7 +55,8 @@ protected:
 private:
     int32 CurrentRound = 1; // номер текущего раунда
     int32 RoundCountDown = 0; // кол-во времени которое осталось для текущего раунда
-    FTimerHandle GameRoundTimerHandle;
+    FTimerHandle GameRoundTimerHandle; // таймер
+    ESTUMatchState MatchState = ESTUMatchState::WaitingToStart; // состояние игры по умолчанию
 
     void SpawnBots(); // функция логики спавна ботов
     void StartRound(); // функция старта раунда
@@ -71,4 +74,6 @@ private:
     void StartRespawn(AController* Controller); // функция старта респавна
 
     void GameOver(); // функция конца игры
+
+    void SetMacthState(ESTUMatchState State); // функция установки состояния матча
 };

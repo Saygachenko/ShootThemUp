@@ -8,6 +8,7 @@ class UNiagaraSystem;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*); // делегат оповещает о том что у нас закончились патроны + указатель на базовое оружие
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature); // делегат который оповещает нашего персонажа о смерти
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float); // делегат для контроля изменения ХП у персонажа
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, ESTUMatchState); // делегат состояний игры
 
 USTRUCT(BLueprintType)
 struct FAmmoData // структура боезапасов
@@ -101,4 +102,13 @@ struct FGameData // структура хранит данные в которой находятся все настройки иг
     // время респавна
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game", meta = (ClampMin = "3", ClampMax = "20"))
     int32 RespawnTime = 5;
+};
+
+UENUM(BlueprintType)
+enum class ESTUMatchState : uint8 // enum класс которые описывает все состояния игры
+{
+    WaitingToStart = 0, // ожидание начала
+    InProgress, // когда идёт игра
+    Pause, // пауза
+    GameOver // игра окончена
 };
