@@ -19,10 +19,19 @@ void ASTUGameHUD::BeginPlay()
 {
     Super::BeginPlay();
 
-    auto PlayerHUDWidget = CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass); // CreateWidget<тип виджета>(указатель на объект владельца, класс виджета который хотим создать) создаём виджет
-    if (PlayerHudWidgetClass) // если виджет создался
+    GameWidgets.Add(ESTUMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass)); // добавляем в наш контейнер состояние игры "InProgress" и его виджет
+    GameWidgets.Add(ESTUMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass)); // добавляем в наш контейнер состояние игры "Pause" и его виджет
+
+    for (auto GameWidgetPair : GameWidgets) // пробегаемся по нашему контейнеру
     {
-        PlayerHUDWidget->AddToViewport(); // вызываем функцию виджета AddToViewport(порядок отрисовки виджета)
+        const auto GameWidget = GameWidgetPair.Value; // получаем наш ключ из контейнера
+        if (!GameWidget) // если виджета нету
+        {
+            continue; // пропускаем условие
+        }
+
+        GameWidget->AddToViewport(); // добавляем виджет на экран
+        GameWidget->SetVisibility(ESlateVisibility::Hidden); // делаем виджет невидимым
     }
 
     if (GetWorld()) // если указатель на мир существует
@@ -50,5 +59,20 @@ void ASTUGameHUD::DrawCrossHair()
 
 void ASTUGameHUD::OnMatchStateChanged(ESTUMatchState State)
 {
+    if (CurrentWidget) // проверяем что текущий виджет существует
+    {
+        CurrentWidget->SetVisibility(ESlateVisibility::Hidden); // делаем его невидимым
+    }
+    
+    if (GameWidgets.Contains(State)) // проверяем что в нашем контейнере есть ключ с таким состоянием
+    {
+        CurrentWidget = GameWidgets[State]; // устанавливаем текущее состояние в наш виджет
+    }
+
+    if (CurrentWidget) // если виджет существует
+    {
+        CurrentWidget->SetVisibility(ESlateVisibility::Visible); // делаем его видимым
+    }
+
     UE_LOG(LogSTUGameHUD, Display, TEXT("Match state changed: %s"), *UEnum::GetValueAsString(State)); // выводим в логи информацию об изменениях состоинии игры GetValueAsString - преобразует значение enum в строку
 }

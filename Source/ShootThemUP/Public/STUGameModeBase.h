@@ -42,6 +42,9 @@ public:
 
     void RespawnRequest(AController* Controller); // функция запроса на респавн
 
+    virtual bool SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate = FCanUnpause()) override; // функция установки паузы
+    virtual bool ClearPause() override; // функция убирает паузу
+
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Game")
     TSubclassOf<AAIController> AIControllerClass; // указатель на класс контроллера ИИ
@@ -75,5 +78,5 @@ private:
 
     void GameOver(); // функция конца игры
 
-    void SetMacthState(ESTUMatchState State); // функция установки состояния матча
+    void SetMatchState(ESTUMatchState State); // функция установки состояния матча
 };

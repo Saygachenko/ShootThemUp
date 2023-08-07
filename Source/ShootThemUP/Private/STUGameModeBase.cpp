@@ -33,7 +33,7 @@ void ASTUGameModeBase::StartPlay()
     CurrentRound = 1; // текущий раунд
     StartRound(); // старт раунда
 
-    SetMacthState(ESTUMatchState::InProgress); // функция состояния игры
+    SetMatchState(ESTUMatchState::InProgress); // функция состояния игры
 }
 
 UClass* ASTUGameModeBase::GetDefaultPawnClassForController_Implementation(AController* InController)
@@ -252,10 +252,10 @@ void ASTUGameModeBase::GameOver()
             Pawn->DisableInput(nullptr); // отключение ввода клавиатуры
         }
     }
-    SetMacthState(ESTUMatchState::GameOver); // функция состояния игры
+    SetMatchState(ESTUMatchState::GameOver); // функция состояния игры
 }
 
-void ASTUGameModeBase::SetMacthState(ESTUMatchState State)
+void ASTUGameModeBase::SetMatchState(ESTUMatchState State)
 {
     if (MatchState == State) // если текущее состояние игры равно тому которое мы хотим установить
     {
@@ -265,3 +265,25 @@ void ASTUGameModeBase::SetMacthState(ESTUMatchState State)
     OnMatchStateChanged.Broadcast(MatchState); // вызывает наш делегат и оповещаем всех подписчиков об изменениях состояния игры
 }
 
+bool ASTUGameModeBase::SetPause(APlayerController* PC, FCanUnpause CanUnpauseDelegate)
+{
+    const auto PauseSet = Super::SetPause(PC, CanUnpauseDelegate); // присваиваем значение родительской функции
+    if (PauseSet) // если пауза была установлена
+    {
+        SetMatchState(ESTUMatchState::Pause); // меняем наш enum на паузу
+    }
+
+    return PauseSet; // ставим паузу
+}
+
+bool ASTUGameModeBase::ClearPause()
+{
+    const auto PauseClear = Super::ClearPause(); // присваиваем значение родительской функции
+
+    if (PauseClear) // если пауза была прекращена
+    {
+        SetMatchState(ESTUMatchState::InProgress); // меняем наш enum на продолжения игры
+    }
+
+    return PauseClear; // убираем паузу
+}
