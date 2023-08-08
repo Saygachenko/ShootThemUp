@@ -19,10 +19,13 @@ class SHOOTTHEMUP_API ASTUGameHUD : public AHUD
 
 protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<UUserWidget> PlayerHudWidgetClass; // проперти в котором хранится класс PlayerHudWidgetClass
+    TSubclassOf<UUserWidget> PlayerHudWidgetClass; // виджет проперти в котором хранится класс PlayerHudWidgetClass
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
-    TSubclassOf<UUserWidget> PauseWidgetClass; // проперти паузы
+    TSubclassOf<UUserWidget> PauseWidgetClass; // виджет проперти паузы
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    TSubclassOf<UUserWidget> GameOverWidgetClass; // виджет проперти окончания игры
 
     virtual void BeginPlay() override;
 

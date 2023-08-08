@@ -21,6 +21,7 @@ void ASTUGameHUD::BeginPlay()
 
     GameWidgets.Add(ESTUMatchState::InProgress, CreateWidget<UUserWidget>(GetWorld(), PlayerHudWidgetClass)); // добавляем в наш контейнер состояние игры "InProgress" и его виджет
     GameWidgets.Add(ESTUMatchState::Pause, CreateWidget<UUserWidget>(GetWorld(), PauseWidgetClass)); // добавляем в наш контейнер состояние игры "Pause" и его виджет
+    GameWidgets.Add(ESTUMatchState::GameOver, CreateWidget<UUserWidget>(GetWorld(), GameOverWidgetClass)); // добавляем в наш контейнер состояние игры "GameOver" и его виджет
 
     for (auto GameWidgetPair : GameWidgets) // пробегаемся по нашему контейнеру
     {

@@ -15,11 +15,11 @@ class SHOOTTHEMUP_API ASTUPlayerState : public APlayerState
 	GENERATED_BODY()
 	
 public:
-	void SetTeaimID(int32 ID)
+	void SetTeamID(int32 ID)
 	{
 		TeamID = ID;
 	}
-	int32 GetTeaimID() const
+	int32 GetTeamID() const
 	{
 		return TeamID;
 	}

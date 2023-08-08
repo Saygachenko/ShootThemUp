@@ -27,6 +27,11 @@ class STUUtils
           const auto PlayerStateOne = Cast<ASTUPlayerState>(ControllerOne->PlayerState); // получаем указатель на PlayerState контроллера
           const auto PlayerStateTwo = Cast<ASTUPlayerState>(ControllerTwo->PlayerState); // получаем указатель на PlayerState контроллера
 
-          return PlayerStateOne && PlayerStateTwo && PlayerStateOne->GetTeaimID() != PlayerStateTwo->GetTeaimID(); // если PlayerStateOne и PlayerStateTwo и PlayerStateOne->GetTeaimID() не равны PlayerStateTwo->GetTeaimID() тогда возвращаем true - это наш враг
+          return PlayerStateOne && PlayerStateTwo && PlayerStateOne->GetTeamID() != PlayerStateTwo->GetTeamID(); // если PlayerStateOne и PlayerStateTwo и PlayerStateOne->GetTeaimID() не равны PlayerStateTwo->GetTeaimID() тогда возвращаем true - это наш враг
+      }
+
+      static FText TextFromInt(int32 Num) // функция которая преобразовывает инт в текст
+      {
+          return FText::FromString(FString::FromInt(Num));
       }
 };
