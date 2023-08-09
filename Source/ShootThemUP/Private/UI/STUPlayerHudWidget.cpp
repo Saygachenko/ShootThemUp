@@ -6,15 +6,15 @@
 #include "Components/STUWeaponComponent.h"
 #include "STUUtils.h"
 
-bool USTUPlayerHudWidget::Initialize()
+void USTUPlayerHudWidget::NativeOnInitialized()
 {
+    Super::NativeOnInitialized();
+
     if (GetOwningPlayer()) // если контроллер существует
     {
         GetOwningPlayer()->GetOnNewPawnNotifier().AddUObject(this, &USTUPlayerHudWidget::OnNewPawn); // подписываемся на делегат GetOnNewPawnNotifier
         OnNewPawn(GetOwningPlayerPawn()); // вызываем нашу функцию нового павна
     }
-
-    return Super::Initialize(); // возвращаем евент Initialize он же возвращает true false
 }
 
 void USTUPlayerHudWidget::OnHealthChanged(float Health, float HealthDelta)

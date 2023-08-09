@@ -7,9 +7,13 @@
 #include "UI/STUPlayerStatRowWidget.h"
 #include "Components/VerticalBox.h"
 #include "STUUtils.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 
-bool USTUGameOverWidget::Initialize()
+void USTUGameOverWidget::NativeOnInitialized()
 {
+    Super::NativeOnInitialized();
+
     if (GetWorld()) // если указатель на мир существует
     {
         const auto GameMode = Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode()); // получаем указатель на гейммод
@@ -19,7 +23,10 @@ bool USTUGameOverWidget::Initialize()
         }
     }
 
-	return Super::Initialize();
+    if (ResetLevelButton) // если указатель на кнопку существует
+    {
+        ResetLevelButton->OnClicked.AddDynamic(this, &USTUGameOverWidget::OnResetLevel); // подписываемся на делегат, когда мы кликаем на кнопку
+    }
 }
 
 void USTUGameOverWidget::OnMatchStateChanged(ESTUMatchState State)
@@ -67,4 +74,10 @@ void USTUGameOverWidget::UpdatePlayerStat()
 
         PlayerStatBox->AddChild(PlayerStatRowWidget); // добавляем строчку в нашу виджет статистику
     }
+}
+
+void USTUGameOverWidget::OnResetLevel()
+{
+    const FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(this); // получаем указатель на имя левела с помощью функции GetCurrentLevelName()
+    UGameplayStatics::OpenLevel(this, FName(CurrentLevelName)); // OpenLevel(this или getworld(), имя уровня) - заново запускает уровень(всё тоже самое что и при первом запуске, всё заново создаётся)
 }

@@ -5,16 +5,14 @@
 #include "Gameframework/GameModeBase.h"
 #include "Components/Button.h"
 
-bool USTUPauseWidget::Initialize()
+void USTUPauseWidget::NativeOnInitialized()
 {
-	const auto InitStatus = Super::Initialize(); // делаем указатель на базовую функцию
+	Super::NativeOnInitialized();
 
 	if (ClearPauseButton) // если указатель на кнопку существует
 	{
 		ClearPauseButton->OnClicked.AddDynamic(this, &USTUPauseWidget::OnClearPause); // подписываемся на делегат, когда мы кликаем на кнопку
 	}
-
-	return InitStatus; // возвращаем значение переменной InitStatus
 }
 
 void USTUPauseWidget::OnClearPause()

@@ -31,7 +31,8 @@ public:
     UFUNCTION(BlueprintImplementableEvent, Category = "UI") // спецификатор BlueprintImplementableEvent - позволяет создать евент на освное функции 
     void OnTakeDamage(); // делаем чтобы наш евент был видел в блюпринтах (не нужно создавать телов в cpp)
 
-    virtual bool Initialize() override; // евент похож на BeginPlay, вызывается 1 раз при старте игры (тут мы будем подписываться на делегат OnHealthChanged)
+protected:
+    virtual void NativeOnInitialized() override; // функция вызывается если инициализация прошла успешно
 
 private:
     void OnHealthChanged(float Health, float HealthDelta); // функция изменения здоровья
