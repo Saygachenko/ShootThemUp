@@ -18,11 +18,17 @@ class SHOOTTHEMUP_API USTUMenuWidget : public UUserWidget
 	
 protected:
 	UPROPERTY(meta = (BindWidget))
-	UButton* StartGameButton; // добавляем указатель на кнопку
+	UButton* StartGameButton; // добавляем указатель на кнопку старта игры
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* QuitGameButton; // добавляем указатель на кнопку выхода из игры
 
 	virtual void NativeOnInitialized() override; // функция вызывается если инициализация прошла успешно
 
 private:
 	UFUNCTION()
 	void OnStartGame(); // логика кнопки старта игры
+
+	UFUNCTION()
+	void OnQuitGame(); // логика кнопки выхода из игры
 };
