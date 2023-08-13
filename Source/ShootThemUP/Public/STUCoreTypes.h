@@ -9,6 +9,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*); // 
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature); // делегат который оповещает нашего персонажа о смерти
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float); // делегат для контроля изменения ХП у персонажа
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, ESTUMatchState); // делегат состояний игры
+DECLARE_MULTICAST_DELEGATE_OneParam(FLevelSelectedSignature, const FLevelData&); // делегат который передаёт данный от levelitem в main menu (для понимания какой уровень выбран)
 
 USTRUCT(BLueprintType)
 struct FAmmoData // структура боезапасов
@@ -111,4 +112,19 @@ enum class ESTUMatchState : uint8 // enum класс которые описывает все состояния 
     InProgress, // когда идёт игра
     Pause, // пауза
     GameOver // игра окончена
+};
+// структура наших уровней
+USTRUCT(BlueprintType)
+struct FLevelData
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+    FName LevelName = NAME_None; // имя уровня
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+    FName LevelDisplayName = NAME_None; // имя уровня которое мы хотим отображать в меню
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Game")
+    UTexture2D* LevelThumb; // картинка для отображения нашего уровня в меню
 };

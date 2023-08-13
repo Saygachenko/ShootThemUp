@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "STUCoreTypes.h"
 #include "STUGameInstance.generated.h"
 
 /**
@@ -17,9 +18,19 @@ class SHOOTTHEMUP_API USTUGameInstance : public UGameInstance
 public:
 	FString TestString = "Hello Game!"; // поле для теста
 
-	FName GetStartupLevelName() const // получаем имя основного уровня
+	FLevelData GetStartupLevel() const // получаем имя основного уровня
 	{
-		return StartupLevelName;
+		return StartupLevel;
+	}
+
+	void SetStartupLevel(const FLevelData& Data) // сеттер установки уровня
+	{
+		StartupLevel = Data;
+	}
+
+	TArray<FLevelData> GetLevelsData() const // геттер уровня из массива
+	{
+		return LevelsData;
 	}
 
 	FName GetMenuLevelName() const // получаем имя уровня меню
@@ -29,9 +40,12 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
-	FName StartupLevelName = NAME_None; // явно храним название уровня (если оно none, выводим инфу об ошибке)
+	FName MenuLevelName = NAME_None; // явно храним название уровня (если оно none, выводим инфу об ошибке)
 
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
-	FName MenuLevelName = NAME_None; // явно храним название уровня (если оно none, выводим инфу об ошибке)
+	TArray<FLevelData> LevelsData; // массив уровней
+
+private:
+	FLevelData StartupLevel; // начальный уровень
 	
 };
