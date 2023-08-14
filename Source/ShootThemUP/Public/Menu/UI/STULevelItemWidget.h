@@ -20,7 +20,7 @@ class SHOOTTHEMUP_API USTULevelItemWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	FLevelSelectedSignature OnLevelSelected; // храним наш делегат
+	FOnLevelSelectedSignature OnLevelSelected; // храним наш делегат
 
 	void SetLevelData(const FLevelData& Data); // установка уровня виджету
 

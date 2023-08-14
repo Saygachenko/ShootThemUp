@@ -42,7 +42,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Game")
 	FName MenuLevelName = NAME_None; // явно храним название уровня (если оно none, выводим инфу об ошибке)
 
-	UPROPERTY(EditDefaultsOnly, Category = "Game")
+	UPROPERTY(EditDefaultsOnly, Category = "Game", meta = (ToolTip = "Level names must be unique!")) // ToolTip - делает подсказки в движке
 	TArray<FLevelData> LevelsData; // массив уровней
 
 private:

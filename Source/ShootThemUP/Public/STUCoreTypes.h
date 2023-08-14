@@ -9,7 +9,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnClipEmptySignature, ASTUBaseWeapon*); // 
 DECLARE_MULTICAST_DELEGATE(FOnDeathSignature); // делегат который оповещает нашего персонажа о смерти
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHealthChangedSignature, float, float); // делегат для контроля изменения ХП у персонажа
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMatchStateChangedSignature, ESTUMatchState); // делегат состояний игры
-DECLARE_MULTICAST_DELEGATE_OneParam(FLevelSelectedSignature, const FLevelData&); // делегат который передаёт данный от levelitem в main menu (для понимания какой уровень выбран)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnLevelSelectedSignature, const FLevelData&); // делегат который передаёт данный от levelitem в main menu (для понимания какой уровень выбран)
 
 USTRUCT(BLueprintType)
 struct FAmmoData // структура боезапасов

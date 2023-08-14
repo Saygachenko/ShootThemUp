@@ -9,7 +9,7 @@
 
 class UButton;
 class UHorizontalBox;
-class STUGameInstance;
+class USTUGameInstance;
 class USTULevelItemWidget;
 
 /**
