@@ -49,6 +49,8 @@ protected:
 
 	virtual void OnDeath();
 
+	virtual void OnHealthChanged(float Health, float HealthDelta); // функция изменения процента здоровья
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -64,8 +66,6 @@ public:
 	void SetPlayerColor(const FLinearColor& Color); // функция будет задавать цвет материалу персонажа
 
 private:
-    void OnHealthChanged(float Health, float HealthDelta);
-
 	UFUNCTION() 
     void OnGroundLanded(const FHitResult& Hit); // наша функция падения с высоты FHitResul - содержит информацию о контакте двух объектов
 
