@@ -71,6 +71,7 @@ void USTUGameOverWidget::UpdatePlayerStat()
         PlayerStatRowWidget->SetDeaths(STUUtils::TextFromInt(PlayerState->GetDeathsNum())); // устанавливаем кол-во смертей в статистику. Используем нашу функцию TextFromInt
         PlayerStatRowWidget->SetTeam(STUUtils::TextFromInt(PlayerState->GetTeamID())); // устанавливаем номер команды в статистику. Используем нашу функцию TextFromInt
         PlayerStatRowWidget->SetPlayerIndicatorVisibillity(Controller->IsPlayerController()); // устанавливаем выделение контроллера в true, в статистике.
+        PlayerStatRowWidget->SetTeamColor(PlayerState->GetTeamColor()); // устанавливаем цвет команды в таблице
 
         PlayerStatBox->AddChild(PlayerStatRowWidget); // добавляем строчку в нашу виджет статистику
     }

@@ -3,13 +3,6 @@
 
 #include "UI/STUGameDataWidget.h"
 #include "STUGameModeBase.h"
-#include "Player/Public/STUPlayerState.h"
-
-int32 USTUGameDataWidget::GetKillsNum() const
-{
-	const auto PlayerState = GetSTUPlayerState(); // получаем указатель на PlayerState
-	return PlayerState ? PlayerState->GetKillsNum() : 0; // если PlayerState существует то возвращаем функции кол-во убийств, иначе 0
-}
 
 int32 USTUGameDataWidget::GetCurrentRoundNum() const
 {
@@ -32,9 +25,4 @@ int32 USTUGameDataWidget::GetRoundSecondRemaining() const
 ASTUGameModeBase* USTUGameDataWidget::GetSTUGameMode() const
 {
 	return GetWorld() ? Cast<ASTUGameModeBase>(GetWorld()->GetAuthGameMode()) : nullptr; // если мир существует, возвращаем указатель на наш GameMode, иначе nullptr
-}
-
-ASTUPlayerState* USTUGameDataWidget::GetSTUPlayerState() const
-{
-	return GetOwningPlayer() ? Cast<ASTUPlayerState>(GetOwningPlayer()->PlayerState) : nullptr; // если контроллер владельца виджета существует, то вызываем указатель на PlayerState, иначе nullptr
 }

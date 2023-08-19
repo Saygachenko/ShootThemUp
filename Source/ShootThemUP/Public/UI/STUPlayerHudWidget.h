@@ -7,6 +7,8 @@
 #include "STUCoreTypes.h"
 #include "STUPlayerHudWidget.generated.h"
 
+class UProgressBar;
+
 UCLASS()
 class SHOOTTHEMUP_API USTUPlayerHudWidget : public UUserWidget
 {
@@ -31,10 +33,26 @@ public:
     UFUNCTION(BlueprintImplementableEvent, Category = "UI") // спецификатор BlueprintImplementableEvent - позволяет создать евент на освное функции 
     void OnTakeDamage(); // делаем чтобы наш евент был видел в блюпринтах (не нужно создавать телов в cpp)
 
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    int32 GetKillsNum() const; // кол-во убийств персонажем
+
 protected:
+    UPROPERTY(meta = (BindWidget))
+    UProgressBar* HealthProgressBar; // проперти нашего бара ХП
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    float PercentColorThreshold = 0.3f; // проперти отвечает за цвет бара в зависимости от кол-во хп
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FLinearColor GoodColor = FLinearColor::White; // проперти отвечает за цвет нашего бара
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
+    FLinearColor BadColor = FLinearColor::Red; // проперти отвечает за цвет нашего бара
+
     virtual void NativeOnInitialized() override; // функция вызывается если инициализация прошла успешно
 
 private:
     void OnHealthChanged(float Health, float HealthDelta); // функция изменения здоровья
     void OnNewPawn(APawn* NewPawn); // функция нового павна
+    void UpdateHealthBar(); // функция логики обновления цвета ХП бара
 };

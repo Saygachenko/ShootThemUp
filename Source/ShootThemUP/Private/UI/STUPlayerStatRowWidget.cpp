@@ -49,3 +49,13 @@ void USTUPlayerStatRowWidget::SetPlayerIndicatorVisibillity(bool Visible)
 	}
 	PlayerIndicatorImage->SetVisibility(Visible ? ESlateVisibility::Visible : ESlateVisibility::Hidden); // устанавливаем видимость индикатора от условаия Visible если он true
 }
+
+void USTUPlayerStatRowWidget::SetTeamColor(const FLinearColor& TeamColor)
+{
+	if (!TeamImage) // если указатель на картинку цвета команды не существует
+	{
+		return; // выход из функции
+	}
+
+	TeamImage->SetColorAndOpacity(TeamColor); // иначе вызываем команду цвета
+}

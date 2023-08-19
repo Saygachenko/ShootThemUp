@@ -5,6 +5,8 @@
 #include "Components/STUHealthComponent.h"
 #include "Components/STUWeaponComponent.h"
 #include "STUUtils.h"
+#include "Components/ProgressBar.h"
+#include "Player/Public/STUPlayerState.h"
 
 void USTUPlayerHudWidget::NativeOnInitialized()
 {
@@ -23,6 +25,8 @@ void USTUPlayerHudWidget::OnHealthChanged(float Health, float HealthDelta)
     {
         OnTakeDamage(); // вызываем евент OnTakeDamage()
     }
+
+    UpdateHealthBar(); // наша функция изменения цвета по условию
 }
 
 void USTUPlayerHudWidget::OnNewPawn(APawn* NewPawn)
@@ -31,6 +35,16 @@ void USTUPlayerHudWidget::OnNewPawn(APawn* NewPawn)
     if (HealthComponent && !HealthComponent->OnHealthChanged.IsBoundToObject(this)) // проверка что указатель на ХП есть и что бинда на делегат нету для нашего объекта
     {
         HealthComponent->OnHealthChanged.AddUObject(this, &USTUPlayerHudWidget::OnHealthChanged); // подписываемся на делегат ХП
+    }
+
+    UpdateHealthBar(); // наша функция изменения цвета по условию
+}
+
+void USTUPlayerHudWidget::UpdateHealthBar()
+{
+    if (HealthProgressBar) // если указатель на прогресс бар ХП существует
+    {
+        HealthProgressBar->SetFillColorAndOpacity(GetHeatlhPercent() > PercentColorThreshold ? GoodColor : BadColor); // устанавливаем цвет ХП бара от условия Текущее ХП большем чем PercentColorThreshold, ставим белый иначе красный
     }
 }
 
@@ -78,4 +92,16 @@ bool USTUPlayerHudWidget::IsPlayerSpectating() const
 {
     const auto Controller = GetOwningPlayer(); // GetOwningPlayer() - функция получает текущий контроль игрока
     return Controller && Controller->GetStateName() == NAME_Spectating;
+}
+
+int32 USTUPlayerHudWidget::GetKillsNum() const
+{
+    const auto Controller = GetOwningPlayer(); // GetOwningPlayer() - функция получает текущий контроль игрока
+    if (!Controller) // если указателя не существует
+    {
+        return 0; // возвращаем 0
+    }
+
+    const auto PlayerState = Cast<ASTUPlayerState>(Controller->PlayerState); // получаем указатель на PlayerState
+    return PlayerState ? PlayerState->GetKillsNum() : 0; // если PlayerState существует то возвращаем функции кол-во убийств, иначе 0
 }

@@ -23,6 +23,7 @@ public:
 	void SetDeaths(const FText& Text); // функция установки значения
 	void SetTeam(const FText& Text); // функция установки значения
 	void SetPlayerIndicatorVisibillity(bool Visible); // функция видимости индикатора
+	void SetTeamColor(const FLinearColor& TeamColor);// функция логики установки цвета команды в таблице
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -39,4 +40,7 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	UImage* PlayerIndicatorImage; // картина выделения нашего персонажа
+
+	UPROPERTY(meta = (BindWidget))
+	UImage* TeamImage; // картина цвета команды
 };
