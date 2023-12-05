@@ -24,6 +24,11 @@ void USTUPlayerHudWidget::OnHealthChanged(float Health, float HealthDelta)
     if (HealthDelta < 0.0f) // если величина изменения здоровья меньше нуля (был нанесен урон нашему персонажу)
     {
         OnTakeDamage(); // вызываем евент OnTakeDamage()
+
+        if (!IsAnimationPlaying(DamageAnimation))
+        {
+            PlayAnimation(DamageAnimation);
+        }
     }
 
     UpdateHealthBar(); // наша функция изменения цвета по условию

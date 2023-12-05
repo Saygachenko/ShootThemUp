@@ -40,6 +40,9 @@ protected:
     UPROPERTY(meta = (BindWidget))
     UProgressBar* HealthProgressBar; // проперти нашего бара ХП
 
+    UPROPERTY(meta = (BindWidgetAnim), Transient)
+    UWidgetAnimation* DamageAnimation;
+
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "UI")
     float PercentColorThreshold = 0.3f; // проперти отвечает за цвет бара в зависимости от кол-во хп
 
